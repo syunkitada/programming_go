@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.examples.routeguide";
+option java_outer_classname = "RouteGuideProto";
+
+package pb;
+
+
+service Simple {
+  rpc Status(StatusRequest) returns (StatusReply) {}
+}
+
+message StatusRequest {
+    string data = 1;
+}
+
+message StatusReply {
+    string data = 1;
+}
