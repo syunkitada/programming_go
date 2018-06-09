@@ -1,7 +1,7 @@
 package testdata
 
 import (
-	"log"
+	"github.com/golang/glog"
 	"os"
 	"path/filepath"
 )
@@ -11,9 +11,9 @@ func Path(rel string) string {
 		return rel
 	}
 
-	v, err := goPackagePath("github.com/syunkitada/go-sample/testdata")
+	v, err := goPackagePath("github.com/syunkitada/go-sample/pkg/simple_app/testdata/")
 	if err != nil {
-		log.Fatalf("Error finding github.com/syunkitada/go-sample/testdata directory: %v", err)
+		glog.Fatalf("Error finding github.com/syunkitada/go-sample/pkg/simple_app/testdata/ directory: %v", err)
 	}
 
 	return filepath.Join(v, rel)
