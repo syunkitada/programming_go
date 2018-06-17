@@ -15,6 +15,22 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/gin-contrib/sse"
+  packages = ["."]
+  revision = "22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae"
+
+[[projects]]
+  name = "github.com/gin-gonic/gin"
+  packages = [
+    ".",
+    "binding",
+    "render"
+  ]
+  revision = "d459835d2b077e44f7c9b453505ee29881d5d12d"
+  version = "v1.2"
+
+[[projects]]
+  branch = "master"
   name = "github.com/golang/glog"
   packages = ["."]
   revision = "23def4e6c14b4da8ac2ed8007337bc5eb5007998"
@@ -78,6 +94,12 @@
   packages = ["."]
   revision = "d9b45f19996c645d38c9266d1f5cf1990e930119"
   version = "v1.0"
+
+[[projects]]
+  name = "github.com/ugorji/go"
+  packages = ["codec"]
+  revision = "b4c50a2b199d93b13dc15e78929cfb23bfdf21ab"
+  version = "v1.1.1"
 
 [[projects]]
   name = "github.com/urfave/cli"
@@ -173,6 +195,12 @@
   version = "v1.12.0"
 
 [[projects]]
+  name = "gopkg.in/go-playground/validator.v8"
+  packages = ["."]
+  revision = "5f1438d3fca68893a817e4a66806cea46a9e4ebf"
+  version = "v8.18.2"
+
+[[projects]]
   name = "gopkg.in/godo.v2"
   packages = [
     ".",
@@ -184,9 +212,15 @@
   revision = "b5fd2f0bef1ebe832e628cfad18ab1cc707f65a1"
   version = "v2.0.9"
 
+[[projects]]
+  name = "gopkg.in/yaml.v2"
+  packages = ["."]
+  revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
+  version = "v2.2.1"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "261868e93bdbeeb4619a8ae23213d4fae3a015d977d0282432b3f3b307e572bb"
+  inputs-digest = "d1e9f838505ede07484d9ee00c1b1e53c201012c5589424370fa606d6f5a1fe1"
   solver-name = "gps-cdcl"
   solver-version = 1
