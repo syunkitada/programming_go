@@ -1,0 +1,15 @@
+[Unit]
+Description=Go Sample WebAPP
+After=syslog.target network.target
+
+[Service]
+Type=simple
+ExecStart=/opt/go-sample/bin/go-sample-webapp
+ExecStop=/bin/kill -WINCH ${MAINPID}
+User=root
+Restart=always
+KillSignal=SIGQUIT
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target
