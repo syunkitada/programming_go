@@ -96,6 +96,15 @@
   version = "v1.0"
 
 [[projects]]
+  name = "github.com/opentracing/opentracing-go"
+  packages = [
+    ".",
+    "log"
+  ]
+  revision = "1949ddbfd147afd4d964a9f00b24eb291e0e7c38"
+  version = "v1.0.2"
+
+[[projects]]
   name = "github.com/ugorji/go"
   packages = ["codec"]
   revision = "b4c50a2b199d93b13dc15e78929cfb23bfdf21ab"
@@ -221,6 +230,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d1e9f838505ede07484d9ee00c1b1e53c201012c5589424370fa606d6f5a1fe1"
+  inputs-digest = "b035438a9f01e8563004288fd361f5f29c5d9e04d21b668627de24d236feb6de"
   solver-name = "gps-cdcl"
   solver-version = 1
