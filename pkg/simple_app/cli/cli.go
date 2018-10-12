@@ -3,7 +3,7 @@ package cli
 import (
 	"os"
 
-	"github.com/syunkitada/go-sample/pkg/simple_app/config"
+	"github.com/syunkitada/go-samples/pkg/simple_app/config"
 	"github.com/urfave/cli"
 
 	"github.com/golang/glog"

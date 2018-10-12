@@ -2,7 +2,7 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/syunkitada/go-sample/pkg/gin/server/handler/debug"
+	"github.com/syunkitada/go-samples/pkg/gin/server/handler/debug"
 	"net/http"
 )
 

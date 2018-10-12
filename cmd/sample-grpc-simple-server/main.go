@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/syunkitada/go-sample/pkg/grpc/simple/server"
+	"github.com/syunkitada/go-samples/pkg/grpc/simple/server"
 )
 
 func main() {

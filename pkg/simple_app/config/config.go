@@ -3,7 +3,7 @@ package config
 import (
 	"github.com/BurntSushi/toml"
 	"github.com/golang/glog"
-	"github.com/syunkitada/go-sample/pkg/simple_app/testdata"
+	"github.com/syunkitada/go-samples/pkg/simple_app/testdata"
 	"github.com/urfave/cli"
 )
 

@@ -2,7 +2,7 @@ package simple_test
 
 import (
 	"fmt"
-	"github.com/syunkitada/go-sample/pkg/test_example/simple"
+	"github.com/syunkitada/go-samples/pkg/test_example/simple"
 )
 
 func Example() {

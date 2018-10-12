@@ -11,9 +11,9 @@ func Path(rel string) string {
 		return rel
 	}
 
-	v, err := goPackagePath("github.com/syunkitada/go-sample/pkg/simple_app/testdata/")
+	v, err := goPackagePath("github.com/syunkitada/go-samples/pkg/simple_app/testdata/")
 	if err != nil {
-		glog.Fatalf("Error finding github.com/syunkitada/go-sample/pkg/simple_app/testdata/ directory: %v", err)
+		glog.Fatalf("Error finding github.com/syunkitada/go-samples/pkg/simple_app/testdata/ directory: %v", err)
 	}
 
 	return filepath.Join(v, rel)

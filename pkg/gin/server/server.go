@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/syunkitada/go-sample/pkg/gin/server/handler"
+	"github.com/syunkitada/go-samples/pkg/gin/server/handler"
 	"log"
 	"net/http"
 	"time"

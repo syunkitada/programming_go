@@ -5,8 +5,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/syunkitada/go-sample/pkg/grpc/simple/pb"
-	"github.com/syunkitada/go-sample/testdata"
+	"github.com/syunkitada/go-samples/pkg/grpc/simple/pb"
+	"github.com/syunkitada/go-samples/testdata"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"

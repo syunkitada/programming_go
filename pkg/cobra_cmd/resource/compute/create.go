@@ -1,9 +1,10 @@
 package compute
 
 import (
-	"fmt"
-
+	"github.com/golang/glog"
 	"github.com/spf13/cobra"
+
+	"github.com/syunkitada/go-samples/pkg/cobra_cmd/config"
 )
 
 var createCmd = &cobra.Command{
@@ -13,7 +14,8 @@ var createCmd = &cobra.Command{
                 This is sample description1.
                 This is sample description2.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("compute create")
+		glog.Info(config.Conf)
+		glog.Info("DEBUG")
 	},
 }
 

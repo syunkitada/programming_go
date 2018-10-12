@@ -3,8 +3,8 @@ package resource
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/syunkitada/go-sample/pkg/cobra_cmd/resource/compute"
-	"github.com/syunkitada/go-sample/pkg/cobra_cmd/resource/image"
+	"github.com/syunkitada/go-samples/pkg/cobra_cmd/resource/compute"
+	"github.com/syunkitada/go-samples/pkg/cobra_cmd/resource/image"
 )
 
 var RootCmd = &cobra.Command{

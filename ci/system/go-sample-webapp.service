@@ -4,7 +4,7 @@ After=syslog.target network.target
 
 [Service]
 Type=simple
-ExecStart=/opt/go-sample/bin/go-sample-webapp
+ExecStart=/opt/go-samples/bin/go-samples-webapp
 ExecStop=/bin/kill -WINCH ${MAINPID}
 User=root
 Restart=always

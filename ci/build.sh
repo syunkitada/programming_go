@@ -2,7 +2,7 @@
 
 BASE_DIR=/tmp/base/
 SRC_DIR=/tmp/src/
-NAME=go-sample
+NAME=go-samples
 RELEASE=`date +"%Y%m%d"`
 TOP_DIR=/tmp/rpmbuild
 SOURCES_DIR=$TOP_DIR/SOURCES
@@ -13,10 +13,10 @@ mkdir -p $SRC_DIR/etc
 
 export GOPATH=/opt/go/
 mkdir -p $GOPATH/src/github.com/syunkitada
-cp -r /tmp/base $GOPATH/src/github.com/syunkitada/go-sample
+cp -r /tmp/base $GOPATH/src/github.com/syunkitada/go-samples
 
-go build -o /tmp/go-sample-webapp $GOPATH/src/github.com/syunkitada/go-sample/cmd/sample-webapp/main.go
-cp /tmp/go-sample-webapp $SRC_DIR
+go build -o /tmp/go-samples-webapp $GOPATH/src/github.com/syunkitada/go-samples/cmd/sample-webapp/main.go
+cp /tmp/go-samples-webapp $SRC_DIR
 cp -r $BASE_DIR $SRC_DIR
 
 cd $SRC_DIR/../

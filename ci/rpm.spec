@@ -19,7 +19,7 @@ tar -xf ../SOURCES/src.tar.gz
 %build
 ls -al
 mkdir -p opt/%{name}/bin
-cp src/go-sample-webapp opt/%{name}/bin
+cp src/go-samples-webapp opt/%{name}/bin
 
 
 %install

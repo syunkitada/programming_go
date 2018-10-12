@@ -1,7 +1,7 @@
 package simple_test
 
 import (
-	"github.com/syunkitada/go-sample/pkg/test_example/simple"
+	"github.com/syunkitada/go-samples/pkg/test_example/simple"
 	"testing"
 )
 

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/syunkitada/go-sample/pkg/gin/server"
+	"github.com/syunkitada/go-samples/pkg/gin/server"
 )
 
 func main() {

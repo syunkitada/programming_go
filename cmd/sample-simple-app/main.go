@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/syunkitada/go-sample/pkg/simple_app/app"
+	"github.com/syunkitada/go-samples/pkg/simple_app/app"
 )
 
 func main() {

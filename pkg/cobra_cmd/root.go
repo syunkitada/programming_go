@@ -1,53 +1,76 @@
 package cobra_cmd
 
 import (
+	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 
-	homedir "github.com/mitchellh/go-homedir"
+	"github.com/golang/glog"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 
-	"github.com/syunkitada/go-sample/pkg/cobra_cmd/resource"
+	"github.com/syunkitada/go-samples/pkg/cobra_cmd/config"
+	"github.com/syunkitada/go-samples/pkg/cobra_cmd/resource"
 )
 
 var (
-	cfgFile string
+	configDir string
+)
+
+var (
+	glogV               int
+	glogLogtostderr     bool
+	glogStderrthreshold int
+	glogAlsologtostderr bool
+	glogVmodule         string
+	glogLogDir          string
+	glogLogBacktraceAt  string
 )
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cobra.yaml)")
-	rootCmd.PersistentFlags().StringP("author", "a", "YOUR NAME", "Author name for copyright attribution")
-	rootCmd.PersistentFlags().Bool("viper", true, "Use Viper for configuration")
-	viper.BindPFlag("author", rootCmd.PersistentFlags().Lookup("author"))
-	viper.BindPFlag("projectbase", rootCmd.PersistentFlags().Lookup("projectbase"))
-	viper.BindPFlag("useViper", rootCmd.PersistentFlags().Lookup("viper"))
-	viper.SetDefault("author", "NAME HERE <EMAIL ADDRESS>")
-	viper.SetDefault("license", "apache")
+	rootCmd.PersistentFlags().StringVar(&configDir, "config-dir", "", "config directory (default is $HOME/.etc)")
+
+	// glog options
+	rootCmd.PersistentFlags().IntVar(&glogV, "glog-v", 0, "log level for V logs")
+	rootCmd.PersistentFlags().BoolVar(&glogLogtostderr, "glog-logtostderr", true, "log to standard error instead of files")
+	rootCmd.PersistentFlags().IntVar(&glogStderrthreshold, "glog-stderrthreshold", 0, "logs at or above this threshold go to stderr")
+	rootCmd.PersistentFlags().BoolVar(&glogAlsologtostderr, "glog-alsologtostderr", false, "log to standard error as well as files")
+	rootCmd.PersistentFlags().StringVar(&glogVmodule, "glog-vmodule", "", "comma-separated list of pattern=N settings for file-filtered logging")
+	rootCmd.PersistentFlags().StringVar(&glogLogDir, "glog-log-dir", "", "If non-empty, write log files in this directory")
+	rootCmd.PersistentFlags().StringVar(&glogLogBacktraceAt, "glog-log-backtrace-at", ":0", "when logging hits line file:N, emit a stack trace")
 
 	rootCmd.AddCommand(resource.RootCmd)
 }
 
 func initConfig() {
-	// Don't forget to read config either from cfgFile or from home directory!
-	if cfgFile != "" {
-		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
-	} else {
-		// Find home directory.
-		home, err := homedir.Dir()
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+	_ = flag.CommandLine.Parse([]string{})
+	flagShim(map[string]string{
+		"v":                fmt.Sprint(glogV),
+		"logtostderr":      fmt.Sprint(glogLogtostderr),
+		"stderrthreshold":  fmt.Sprint(glogStderrthreshold),
+		"alsologtostderr":  fmt.Sprint(glogAlsologtostderr),
+		"vmodule":          glogVmodule,
+		"log_dir":          glogLogDir,
+		"log_backtrace_at": glogLogBacktraceAt,
+	})
+
+	if configDir == "" {
+		home := os.Getenv("HOME")
+		configDir = filepath.Join(home, ".etc")
+	}
+
+	configFile := filepath.Join(configDir, "app.toml")
+	err := config.LoadConfig(configFile)
+	if err != nil {
+		glog.Fatal(err)
+	}
+}
+
+func flagShim(fakeVals map[string]string) {
+	flag.VisitAll(func(fl *flag.Flag) {
+		if val, ok := fakeVals[fl.Name]; ok {
+			fl.Value.Set(val)
 		}
-
-		// Search config in home directory with name ".cobra" (without extension).
-		viper.AddConfigPath(home)
-		viper.SetConfigName(".cobra")
-	}
-
-	if err := viper.ReadInConfig(); err != nil {
-		fmt.Println("Can't read config:", err)
-	}
+	})
 }

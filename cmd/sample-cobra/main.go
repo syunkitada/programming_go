@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/syunkitada/go-sample/pkg/cobra_cmd"
+	"github.com/syunkitada/go-samples/pkg/cobra_cmd"
 )
 
 func main() {

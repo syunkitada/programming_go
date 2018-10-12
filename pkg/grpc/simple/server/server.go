@@ -9,8 +9,8 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
-	"github.com/syunkitada/go-sample/pkg/grpc/simple/pb"
-	"github.com/syunkitada/go-sample/testdata"
+	"github.com/syunkitada/go-samples/pkg/grpc/simple/pb"
+	"github.com/syunkitada/go-samples/testdata"
 	"google.golang.org/grpc/credentials"
 )
 
