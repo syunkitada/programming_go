@@ -1,4 +1,4 @@
-package cobra_cmd
+package ctl
 
 import (
 	"flag"
@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/syunkitada/go-samples/pkg/cobra_cmd/config"
-	"github.com/syunkitada/go-samples/pkg/cobra_cmd/resource"
+	"github.com/syunkitada/go-samples/pkg/cobra_cmd/ctl/resource"
 )
 
 var (
@@ -40,7 +40,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&glogLogDir, "glog-log-dir", "", "If non-empty, write log files in this directory")
 	rootCmd.PersistentFlags().StringVar(&glogLogBacktraceAt, "glog-log-backtrace-at", ":0", "when logging hits line file:N, emit a stack trace")
 
-	rootCmd.AddCommand(resource.RootCmd)
+	rootCmd.AddCommand(resource.rootCmd)
 }
 
 func initConfig() {

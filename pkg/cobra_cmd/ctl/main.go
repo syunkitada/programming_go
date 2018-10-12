@@ -1,17 +1,14 @@
-package cobra_cmd
+package ctl
 
 import (
-	"fmt"
-	"os"
-
+	"github.com/golang/glog"
 	"github.com/spf13/cobra"
 )
 
 var rootCmd = &cobra.Command{}
 
-func Execute() {
+func Main() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		glog.Fatal(err)
 	}
 }

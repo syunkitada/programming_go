@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/syunkitada/go-samples/pkg/cobra_cmd"
+	"github.com/syunkitada/go-samples/pkg/cobra_cmd/ctl"
 )
 
 func main() {
-	cobra_cmd.Execute()
+	ctl.Main()
 }
