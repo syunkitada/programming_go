@@ -1,0 +1,14 @@
+[Unit]
+Description=Go Sample WebAPP
+After=syslog.target network.target
+
+[Service]
+Type=simple
+ExecStart=/opt/grcp-sample/bin/grcp-sample
+ExecStop=/bin/kill -WINCH ${MAINPID}
+User=root
+Restart=always
+KillSignal=SIGQUIT
+
+[Install]
+WantedBy=multi-user.target
