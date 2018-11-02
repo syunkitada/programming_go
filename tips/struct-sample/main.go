@@ -16,20 +16,35 @@ func (b *Base) get() int {
 	return b.num
 }
 
+func (b *Base) dump() {
+	fmt.Printf("Base %v\n", b.num)
+}
+
+func (b *Base) callDump() {
+	b.dump()
+}
+
 type Sub struct {
 	Base
 }
 
+func (s Sub) dump() {
+	fmt.Printf("Sub %v\n", s.num)
+}
+
 func main() {
 	base := Base{}
-	fmt.Println(base.get())
+	base.dump()
+	base.callDump()
 
 	sub := Sub{
 		Base: Base{
 			num: 1,
 		},
 	}
-	fmt.Println(sub.get())
+	sub.dump()
+
 	sub.set(2)
-	fmt.Println(sub.get())
+	sub.dump()
+	sub.callDump()
 }
