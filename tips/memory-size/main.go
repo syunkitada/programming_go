@@ -5,6 +5,10 @@ import (
 	"unsafe"
 )
 
+type Base interface {
+	Hoge()
+}
+
 type Sample struct {
 	flag      bool
 	num       int
@@ -18,6 +22,12 @@ type Sample struct {
 	numMap    map[string]int
 }
 
+func (s *Sample) Hoge() {
+	fmt.Println("Hoge")
+}
+
+// 関数にポインタ渡しする必要があるのは、structと配列(スライスではない)のみ
+// 他はサイズが小さい、もしくは参照なのでそのまま渡してよい
 func main() {
 	sample := Sample{}
 	fmt.Printf("Sample: %v\n", unsafe.Sizeof(sample))
@@ -32,6 +42,10 @@ func main() {
 	fmt.Printf("Sample.numSlice: %v\n", unsafe.Sizeof(sample.numSlice))   // 24
 	fmt.Printf("Sample.strSlice: %v\n", unsafe.Sizeof(sample.strSlice))   // 24
 	fmt.Printf("Sample.numMap: %v\n", unsafe.Sizeof(sample.numMap))       // 8
+
+	var base Base
+	base = &sample
+	fmt.Printf("Interface: %v\n", unsafe.Sizeof(base)) // 16
 
 	for i := 1; i < 100; i += 1 {
 		sample.numSlice = append(sample.numSlice, i)
