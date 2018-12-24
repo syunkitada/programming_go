@@ -34,14 +34,14 @@ func newConfig(configDir string) *Config {
 		},
 		SimpleServer: SimpleServerConfig{
 			Grpc: GrpcConfig{
-				Listen:             "localhost:13300",
+				Listen:             "localhost:23300",
 				CertFile:           "server.pem",
 				KeyFile:            "server.key",
 				CaFile:             "ca.pem",
 				ServerHostOverride: "x.test.youtube.com",
 				Timeout:            2,
 				Targets: []string{
-					"localhost:13300",
+					"localhost:23300",
 				},
 			},
 		},

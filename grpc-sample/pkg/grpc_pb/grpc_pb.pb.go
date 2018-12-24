@@ -33,7 +33,7 @@ func (m *StatusRequest) Reset()         { *m = StatusRequest{} }
 func (m *StatusRequest) String() string { return proto.CompactTextString(m) }
 func (*StatusRequest) ProtoMessage()    {}
 func (*StatusRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_grpc_pb_1c1f3ad0e9de4e77, []int{0}
+	return fileDescriptor_grpc_pb_de1cbace5d41cb51, []int{0}
 }
 func (m *StatusRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_StatusRequest.Unmarshal(m, b)
@@ -65,7 +65,7 @@ func (m *StatusReply) Reset()         { *m = StatusReply{} }
 func (m *StatusReply) String() string { return proto.CompactTextString(m) }
 func (*StatusReply) ProtoMessage()    {}
 func (*StatusReply) Descriptor() ([]byte, []int) {
-	return fileDescriptor_grpc_pb_1c1f3ad0e9de4e77, []int{1}
+	return fileDescriptor_grpc_pb_de1cbace5d41cb51, []int{1}
 }
 func (m *StatusReply) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_StatusReply.Unmarshal(m, b)
@@ -99,9 +99,204 @@ func (m *StatusReply) GetErr() string {
 	return ""
 }
 
+type GetLogRequest struct {
+	Msg                  string   `protobuf:"bytes,1,opt,name=msg" json:"msg,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetLogRequest) Reset()         { *m = GetLogRequest{} }
+func (m *GetLogRequest) String() string { return proto.CompactTextString(m) }
+func (*GetLogRequest) ProtoMessage()    {}
+func (*GetLogRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_grpc_pb_de1cbace5d41cb51, []int{2}
+}
+func (m *GetLogRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetLogRequest.Unmarshal(m, b)
+}
+func (m *GetLogRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetLogRequest.Marshal(b, m, deterministic)
+}
+func (dst *GetLogRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetLogRequest.Merge(dst, src)
+}
+func (m *GetLogRequest) XXX_Size() int {
+	return xxx_messageInfo_GetLogRequest.Size(m)
+}
+func (m *GetLogRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetLogRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetLogRequest proto.InternalMessageInfo
+
+func (m *GetLogRequest) GetMsg() string {
+	if m != nil {
+		return m.Msg
+	}
+	return ""
+}
+
+type GetLogStream struct {
+	Msg                  string   `protobuf:"bytes,1,opt,name=msg" json:"msg,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetLogStream) Reset()         { *m = GetLogStream{} }
+func (m *GetLogStream) String() string { return proto.CompactTextString(m) }
+func (*GetLogStream) ProtoMessage()    {}
+func (*GetLogStream) Descriptor() ([]byte, []int) {
+	return fileDescriptor_grpc_pb_de1cbace5d41cb51, []int{3}
+}
+func (m *GetLogStream) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetLogStream.Unmarshal(m, b)
+}
+func (m *GetLogStream) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetLogStream.Marshal(b, m, deterministic)
+}
+func (dst *GetLogStream) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetLogStream.Merge(dst, src)
+}
+func (m *GetLogStream) XXX_Size() int {
+	return xxx_messageInfo_GetLogStream.Size(m)
+}
+func (m *GetLogStream) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetLogStream.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetLogStream proto.InternalMessageInfo
+
+func (m *GetLogStream) GetMsg() string {
+	if m != nil {
+		return m.Msg
+	}
+	return ""
+}
+
+type ReportLogStream struct {
+	Msg                  string   `protobuf:"bytes,1,opt,name=msg" json:"msg,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ReportLogStream) Reset()         { *m = ReportLogStream{} }
+func (m *ReportLogStream) String() string { return proto.CompactTextString(m) }
+func (*ReportLogStream) ProtoMessage()    {}
+func (*ReportLogStream) Descriptor() ([]byte, []int) {
+	return fileDescriptor_grpc_pb_de1cbace5d41cb51, []int{4}
+}
+func (m *ReportLogStream) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ReportLogStream.Unmarshal(m, b)
+}
+func (m *ReportLogStream) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ReportLogStream.Marshal(b, m, deterministic)
+}
+func (dst *ReportLogStream) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ReportLogStream.Merge(dst, src)
+}
+func (m *ReportLogStream) XXX_Size() int {
+	return xxx_messageInfo_ReportLogStream.Size(m)
+}
+func (m *ReportLogStream) XXX_DiscardUnknown() {
+	xxx_messageInfo_ReportLogStream.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ReportLogStream proto.InternalMessageInfo
+
+func (m *ReportLogStream) GetMsg() string {
+	if m != nil {
+		return m.Msg
+	}
+	return ""
+}
+
+type ReportLogResponse struct {
+	Msg                  string   `protobuf:"bytes,1,opt,name=msg" json:"msg,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ReportLogResponse) Reset()         { *m = ReportLogResponse{} }
+func (m *ReportLogResponse) String() string { return proto.CompactTextString(m) }
+func (*ReportLogResponse) ProtoMessage()    {}
+func (*ReportLogResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_grpc_pb_de1cbace5d41cb51, []int{5}
+}
+func (m *ReportLogResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ReportLogResponse.Unmarshal(m, b)
+}
+func (m *ReportLogResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ReportLogResponse.Marshal(b, m, deterministic)
+}
+func (dst *ReportLogResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ReportLogResponse.Merge(dst, src)
+}
+func (m *ReportLogResponse) XXX_Size() int {
+	return xxx_messageInfo_ReportLogResponse.Size(m)
+}
+func (m *ReportLogResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ReportLogResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ReportLogResponse proto.InternalMessageInfo
+
+func (m *ReportLogResponse) GetMsg() string {
+	if m != nil {
+		return m.Msg
+	}
+	return ""
+}
+
+type ChatStream struct {
+	Msg                  string   `protobuf:"bytes,1,opt,name=msg" json:"msg,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ChatStream) Reset()         { *m = ChatStream{} }
+func (m *ChatStream) String() string { return proto.CompactTextString(m) }
+func (*ChatStream) ProtoMessage()    {}
+func (*ChatStream) Descriptor() ([]byte, []int) {
+	return fileDescriptor_grpc_pb_de1cbace5d41cb51, []int{6}
+}
+func (m *ChatStream) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ChatStream.Unmarshal(m, b)
+}
+func (m *ChatStream) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ChatStream.Marshal(b, m, deterministic)
+}
+func (dst *ChatStream) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ChatStream.Merge(dst, src)
+}
+func (m *ChatStream) XXX_Size() int {
+	return xxx_messageInfo_ChatStream.Size(m)
+}
+func (m *ChatStream) XXX_DiscardUnknown() {
+	xxx_messageInfo_ChatStream.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ChatStream proto.InternalMessageInfo
+
+func (m *ChatStream) GetMsg() string {
+	if m != nil {
+		return m.Msg
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*StatusRequest)(nil), "grpc_pb.StatusRequest")
 	proto.RegisterType((*StatusReply)(nil), "grpc_pb.StatusReply")
+	proto.RegisterType((*GetLogRequest)(nil), "grpc_pb.GetLogRequest")
+	proto.RegisterType((*GetLogStream)(nil), "grpc_pb.GetLogStream")
+	proto.RegisterType((*ReportLogStream)(nil), "grpc_pb.ReportLogStream")
+	proto.RegisterType((*ReportLogResponse)(nil), "grpc_pb.ReportLogResponse")
+	proto.RegisterType((*ChatStream)(nil), "grpc_pb.ChatStream")
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -117,6 +312,9 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type SimpleClient interface {
 	Status(ctx context.Context, in *StatusRequest, opts ...grpc.CallOption) (*StatusReply, error)
+	GetLogs(ctx context.Context, in *GetLogRequest, opts ...grpc.CallOption) (Simple_GetLogsClient, error)
+	ReportLogs(ctx context.Context, opts ...grpc.CallOption) (Simple_ReportLogsClient, error)
+	Chat(ctx context.Context, opts ...grpc.CallOption) (Simple_ChatClient, error)
 }
 
 type simpleClient struct {
@@ -136,9 +334,109 @@ func (c *simpleClient) Status(ctx context.Context, in *StatusRequest, opts ...gr
 	return out, nil
 }
 
+func (c *simpleClient) GetLogs(ctx context.Context, in *GetLogRequest, opts ...grpc.CallOption) (Simple_GetLogsClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_Simple_serviceDesc.Streams[0], "/grpc_pb.Simple/GetLogs", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &simpleGetLogsClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type Simple_GetLogsClient interface {
+	Recv() (*GetLogStream, error)
+	grpc.ClientStream
+}
+
+type simpleGetLogsClient struct {
+	grpc.ClientStream
+}
+
+func (x *simpleGetLogsClient) Recv() (*GetLogStream, error) {
+	m := new(GetLogStream)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *simpleClient) ReportLogs(ctx context.Context, opts ...grpc.CallOption) (Simple_ReportLogsClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_Simple_serviceDesc.Streams[1], "/grpc_pb.Simple/ReportLogs", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &simpleReportLogsClient{stream}
+	return x, nil
+}
+
+type Simple_ReportLogsClient interface {
+	Send(*ReportLogStream) error
+	CloseAndRecv() (*ReportLogResponse, error)
+	grpc.ClientStream
+}
+
+type simpleReportLogsClient struct {
+	grpc.ClientStream
+}
+
+func (x *simpleReportLogsClient) Send(m *ReportLogStream) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *simpleReportLogsClient) CloseAndRecv() (*ReportLogResponse, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(ReportLogResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *simpleClient) Chat(ctx context.Context, opts ...grpc.CallOption) (Simple_ChatClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_Simple_serviceDesc.Streams[2], "/grpc_pb.Simple/Chat", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &simpleChatClient{stream}
+	return x, nil
+}
+
+type Simple_ChatClient interface {
+	Send(*ChatStream) error
+	Recv() (*ChatStream, error)
+	grpc.ClientStream
+}
+
+type simpleChatClient struct {
+	grpc.ClientStream
+}
+
+func (x *simpleChatClient) Send(m *ChatStream) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *simpleChatClient) Recv() (*ChatStream, error) {
+	m := new(ChatStream)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // SimpleServer is the server API for Simple service.
 type SimpleServer interface {
 	Status(context.Context, *StatusRequest) (*StatusReply, error)
+	GetLogs(*GetLogRequest, Simple_GetLogsServer) error
+	ReportLogs(Simple_ReportLogsServer) error
+	Chat(Simple_ChatServer) error
 }
 
 func RegisterSimpleServer(s *grpc.Server, srv SimpleServer) {
@@ -163,6 +461,79 @@ func _Simple_Status_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Simple_GetLogs_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetLogRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(SimpleServer).GetLogs(m, &simpleGetLogsServer{stream})
+}
+
+type Simple_GetLogsServer interface {
+	Send(*GetLogStream) error
+	grpc.ServerStream
+}
+
+type simpleGetLogsServer struct {
+	grpc.ServerStream
+}
+
+func (x *simpleGetLogsServer) Send(m *GetLogStream) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func _Simple_ReportLogs_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(SimpleServer).ReportLogs(&simpleReportLogsServer{stream})
+}
+
+type Simple_ReportLogsServer interface {
+	SendAndClose(*ReportLogResponse) error
+	Recv() (*ReportLogStream, error)
+	grpc.ServerStream
+}
+
+type simpleReportLogsServer struct {
+	grpc.ServerStream
+}
+
+func (x *simpleReportLogsServer) SendAndClose(m *ReportLogResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *simpleReportLogsServer) Recv() (*ReportLogStream, error) {
+	m := new(ReportLogStream)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func _Simple_Chat_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(SimpleServer).Chat(&simpleChatServer{stream})
+}
+
+type Simple_ChatServer interface {
+	Send(*ChatStream) error
+	Recv() (*ChatStream, error)
+	grpc.ServerStream
+}
+
+type simpleChatServer struct {
+	grpc.ServerStream
+}
+
+func (x *simpleChatServer) Send(m *ChatStream) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *simpleChatServer) Recv() (*ChatStream, error) {
+	m := new(ChatStream)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 var _Simple_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "grpc_pb.Simple",
 	HandlerType: (*SimpleServer)(nil),
@@ -172,23 +543,48 @@ var _Simple_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Simple_Status_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "GetLogs",
+			Handler:       _Simple_GetLogs_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "ReportLogs",
+			Handler:       _Simple_ReportLogs_Handler,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "Chat",
+			Handler:       _Simple_Chat_Handler,
+			ServerStreams: true,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "grpc_pb.proto",
 }
 
-func init() { proto.RegisterFile("grpc_pb.proto", fileDescriptor_grpc_pb_1c1f3ad0e9de4e77) }
+func init() { proto.RegisterFile("grpc_pb.proto", fileDescriptor_grpc_pb_de1cbace5d41cb51) }
 
-var fileDescriptor_grpc_pb_1c1f3ad0e9de4e77 = []byte{
-	// 173 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x4d, 0x2f, 0x2a, 0x48,
-	0x8e, 0x2f, 0x48, 0xd2, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x87, 0x72, 0x95, 0xf8, 0xb9,
-	0x78, 0x83, 0x4b, 0x12, 0x4b, 0x4a, 0x8b, 0x83, 0x52, 0x0b, 0x4b, 0x53, 0x8b, 0x4b, 0x94, 0x0c,
-	0xb9, 0xb8, 0x61, 0x02, 0x05, 0x39, 0x95, 0x42, 0x02, 0x5c, 0xcc, 0xb9, 0xc5, 0xe9, 0x12, 0x8c,
-	0x0a, 0x8c, 0x1a, 0x9c, 0x41, 0x20, 0x26, 0x48, 0x24, 0xb5, 0xa8, 0x48, 0x82, 0x09, 0x22, 0x92,
-	0x5a, 0x54, 0x64, 0xe4, 0xc4, 0xc5, 0x16, 0x9c, 0x99, 0x5b, 0x90, 0x93, 0x2a, 0x64, 0xc1, 0xc5,
-	0x06, 0xd1, 0x2c, 0x24, 0xa6, 0x07, 0xb3, 0x10, 0xc5, 0x78, 0x29, 0x11, 0x0c, 0xf1, 0x82, 0x9c,
-	0x4a, 0x25, 0x06, 0x27, 0x03, 0x2e, 0xe9, 0xcc, 0x7c, 0xb0, 0x9c, 0x5e, 0x6a, 0x45, 0x22, 0xc8,
-	0xb0, 0x62, 0xbd, 0xa2, 0xfc, 0xd2, 0x92, 0xd4, 0xf4, 0xd2, 0xcc, 0x94, 0x54, 0x27, 0xfe, 0x20,
-	0x10, 0xdb, 0x1d, 0xc4, 0x0e, 0x00, 0x79, 0x20, 0x80, 0x31, 0x89, 0x0d, 0xec, 0x13, 0x63, 0x40,
-	0x00, 0x00, 0x00, 0xff, 0xff, 0xe0, 0xf6, 0x6e, 0x7e, 0xda, 0x00, 0x00, 0x00,
+var fileDescriptor_grpc_pb_de1cbace5d41cb51 = []byte{
+	// 295 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x92, 0x4f, 0x4b, 0xc3, 0x40,
+	0x10, 0xc5, 0xb3, 0x55, 0x52, 0x1c, 0x0d, 0xd1, 0xf5, 0x0f, 0x21, 0x82, 0xd4, 0x15, 0xa1, 0xa7,
+	0x10, 0x15, 0xc4, 0x83, 0xa7, 0x0a, 0xf6, 0xe2, 0xa1, 0x24, 0x1f, 0x40, 0x52, 0x1d, 0x62, 0x20,
+	0x71, 0xd7, 0xdd, 0x0d, 0xd8, 0x9b, 0x1f, 0x5d, 0xb6, 0xdb, 0x44, 0xdb, 0x44, 0x6f, 0xb3, 0x6f,
+	0x7e, 0x33, 0xec, 0x7b, 0x0c, 0x78, 0xb9, 0x14, 0x2f, 0xcf, 0x62, 0x1e, 0x09, 0xc9, 0x35, 0xa7,
+	0xc3, 0xd5, 0x93, 0xf9, 0xe0, 0xa5, 0x3a, 0xd3, 0xb5, 0x4a, 0xf0, 0xa3, 0x46, 0xa5, 0xd9, 0x15,
+	0xec, 0x36, 0x82, 0x28, 0x17, 0x74, 0x1f, 0xb6, 0x2a, 0x95, 0x07, 0x64, 0x44, 0xc6, 0x3b, 0x89,
+	0x29, 0x8d, 0x82, 0x52, 0x06, 0x03, 0xab, 0xa0, 0x94, 0xec, 0x1c, 0xbc, 0x29, 0xea, 0x27, 0x9e,
+	0xaf, 0x76, 0x74, 0x87, 0xd8, 0x08, 0xf6, 0x2c, 0x92, 0x6a, 0x89, 0x59, 0xd5, 0x43, 0x5c, 0x80,
+	0x9f, 0xa0, 0xe0, 0xf2, 0x5f, 0xe8, 0x12, 0x0e, 0x5a, 0x28, 0x41, 0x25, 0xf8, 0xbb, 0xc2, 0x1e,
+	0xec, 0x0c, 0xe0, 0xe1, 0x2d, 0xd3, 0x7f, 0xad, 0xb9, 0xfe, 0x1a, 0x80, 0x9b, 0x16, 0x95, 0x28,
+	0x91, 0xde, 0x81, 0x6b, 0xed, 0xd2, 0x93, 0xa8, 0x89, 0x68, 0x2d, 0x90, 0xf0, 0xa8, 0xa3, 0x8b,
+	0x72, 0xc1, 0x1c, 0x7a, 0x0f, 0x43, 0x6b, 0xe9, 0xf7, 0xe8, 0x5a, 0x0e, 0xe1, 0xf1, 0x86, 0x6e,
+	0x3f, 0xc4, 0x9c, 0x98, 0xd0, 0x47, 0x80, 0xd6, 0x89, 0xa2, 0x41, 0x0b, 0x6e, 0x64, 0x10, 0x86,
+	0xdd, 0x4e, 0x63, 0x9c, 0x39, 0x63, 0x42, 0x6f, 0x61, 0xdb, 0x58, 0xa5, 0x87, 0x2d, 0xf7, 0xe3,
+	0x3c, 0xec, 0x13, 0xcd, 0x54, 0x4c, 0x26, 0x31, 0x9c, 0x16, 0x7c, 0xd9, 0x8e, 0xf0, 0x33, 0x33,
+	0x51, 0xa8, 0x48, 0xf2, 0x5a, 0x63, 0x5e, 0x17, 0xaf, 0x38, 0xf1, 0x13, 0x53, 0x4f, 0x4d, 0x3d,
+	0x33, 0x07, 0x33, 0x23, 0x73, 0x77, 0x79, 0x39, 0x37, 0xdf, 0x01, 0x00, 0x00, 0xff, 0xff, 0xea,
+	0x76, 0x27, 0xa7, 0x4a, 0x02, 0x00, 0x00,
 }

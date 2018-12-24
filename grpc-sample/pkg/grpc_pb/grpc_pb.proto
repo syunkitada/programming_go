@@ -9,6 +9,9 @@ package grpc_pb;
 
 service Simple {
   rpc Status(StatusRequest) returns (StatusReply) {}
+  rpc GetLogs(GetLogRequest) returns (stream GetLogStream) {}
+  rpc ReportLogs(stream ReportLogStream) returns (ReportLogResponse) {}
+  rpc Chat(stream ChatStream) returns (stream ChatStream) {}
 }
 
 message StatusRequest {}
@@ -16,4 +19,24 @@ message StatusRequest {}
 message StatusReply {
     string msg = 1;
     string err = 2;
+}
+
+message GetLogRequest {
+    string msg = 1;
+}
+
+message GetLogStream {
+    string msg = 1;
+}
+
+message ReportLogStream {
+    string msg = 1;
+}
+
+message ReportLogResponse {
+    string msg = 1;
+}
+
+message ChatStream {
+    string msg = 1;
 }

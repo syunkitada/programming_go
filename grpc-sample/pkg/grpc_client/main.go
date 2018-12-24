@@ -20,4 +20,7 @@ func init() {
 	config.InitFlags(rootCmd)
 
 	rootCmd.AddCommand(statusCmd)
+	rootCmd.AddCommand(getLogsCmd)
+	rootCmd.AddCommand(reportLogsCmd)
+	rootCmd.AddCommand(chatCmd)
 }

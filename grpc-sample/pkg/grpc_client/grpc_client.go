@@ -1,7 +1,10 @@
 package grpc_client
 
 import (
+	"bufio"
 	"errors"
+	"io"
+	"os"
 	"time"
 
 	"github.com/golang/glog"
@@ -75,4 +78,115 @@ func (client *SimpleClient) Status() (*grpc_pb.StatusReply, error) {
 	}
 
 	return statusResponse, nil
+}
+
+func (client *SimpleClient) GetLogs() {
+	conn, connErr := client.NewClientConnection()
+	defer conn.Close()
+	if connErr != nil {
+		glog.Warning("Failed NewClientConnection")
+		return
+	}
+
+	rpcClient := grpc_pb.NewSimpleClient(conn)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	req := &grpc_pb.GetLogRequest{
+		Msg: "hoge",
+	}
+	stream, err := rpcClient.GetLogs(ctx, req)
+	if err != nil {
+		glog.Fatalf("%v.ListFeatures(_) = _, %v", client, err)
+	}
+	for {
+		feature, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			glog.Fatalf("%v.ListFeatures(_) = _, %v", client, err)
+		}
+		glog.Info(feature)
+	}
+}
+
+func (client *SimpleClient) ReportLogs() {
+	conn, connErr := client.NewClientConnection()
+	defer conn.Close()
+	if connErr != nil {
+		glog.Warning("Failed NewClientConnection")
+		return
+	}
+
+	rpcClient := grpc_pb.NewSimpleClient(conn)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	stream, err := rpcClient.ReportLogs(ctx)
+	if err != nil {
+		glog.Fatalf("%v.ListFeatures(_) = _, %v", client, err)
+	}
+
+	msgs := []string{
+		"hoge", "piyo",
+	}
+	for _, msg := range msgs {
+		if err = stream.Send(&grpc_pb.ReportLogStream{
+			Msg: msg,
+		}); err != nil {
+			glog.Error(err)
+		}
+	}
+
+	reply, err := stream.CloseAndRecv()
+	if err != nil {
+		glog.Fatalf("%v.CloseAndRecv() got error %v, want %v", stream, err, nil)
+	}
+	glog.Infof("Route summary: %v", reply)
+}
+
+func (client *SimpleClient) Chat() {
+	conn, connErr := client.NewClientConnection()
+	defer conn.Close()
+	if connErr != nil {
+		glog.Warning("Failed NewClientConnection")
+		return
+	}
+
+	rpcClient := grpc_pb.NewSimpleClient(conn)
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	defer cancel()
+
+	stream, err := rpcClient.Chat(ctx)
+	if err != nil {
+		glog.Fatalf("%v.ListFeatures(_) = _, %v", client, err)
+	}
+
+	waitc := make(chan struct{})
+	go func() {
+		for {
+			in, err := stream.Recv()
+			if err == io.EOF {
+				// read done.
+				close(waitc)
+				return
+			}
+			if err != nil {
+				glog.Fatalf("Failed to receive a note : %v", err)
+			}
+			glog.Infof("Got message %v", in)
+		}
+	}()
+
+	s := bufio.NewScanner(os.Stdin)
+	for s.Scan() {
+		if err := stream.Send(&grpc_pb.ChatStream{
+			Msg: s.Text(),
+		}); err != nil {
+			glog.Fatalf("Failed to send a note: %v", err)
+		}
+	}
+	stream.CloseSend()
+	<-waitc
 }
