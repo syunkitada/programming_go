@@ -10,46 +10,85 @@ import (
 )
 
 type Reader struct {
-	offset int64
-	file   *os.File
-	reader *bufio.Reader
+	path      string
+	maxOffset int64
+	offset    int64
+	file      *os.File
+	reader    *bufio.Reader
 }
 
 func NewReader(path string, maxOffset int64) (*Reader, error) {
-	file, err := os.Open(path)
+	reader := &Reader{
+		path:      path,
+		maxOffset: maxOffset,
+	}
+	err := reader.ReOpen()
+	return reader, err
+}
+
+func (reader *Reader) ReOpen() error {
+	var err error
+	reader.file, err = os.Open(reader.path)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	reader := bufio.NewReaderSize(file, 1024)
+	reader.reader = bufio.NewReaderSize(reader.file, 1024)
 
-	var offset int64
-	if maxOffset > 0 {
-		_, err = file.Seek(-1*maxOffset, os.SEEK_END)
+	if reader.maxOffset > 0 {
+		var endOffset int64
+		endOffset, err = reader.file.Seek(0, os.SEEK_END)
 		if err != nil {
-			return nil, err
+			return err
 		}
-		_, err = reader.ReadString('\n')
-		if err != nil {
-			return nil, err
-		}
-		offset, err = file.Seek(0, os.SEEK_CUR)
-		if err != nil {
-			return nil, err
+		if reader.maxOffset > endOffset {
+			reader.offset = 0
+		} else {
+			_, err = reader.file.Seek(-1*reader.maxOffset, os.SEEK_END)
+			if err != nil {
+				return err
+			}
+			_, err = reader.reader.ReadString('\n')
+			if err != nil {
+				return err
+			}
+			reader.offset, err = reader.file.Seek(0, os.SEEK_CUR)
+			if err != nil {
+				return err
+			}
 		}
 	} else {
-		offset = 0
+		reader.offset = 0
 	}
 
-	return &Reader{
-		offset: offset,
-		file:   file,
-		reader: reader,
-	}, nil
+	return nil
 }
 
 func (reader *Reader) Tail() error {
-	_, err := reader.file.Seek(reader.offset, 0)
+	var err error
+
+	// logrotateなどでファイル移動された場合に対応できないため、ファイルは都度開く
+	reader.file, err = os.Open(reader.path)
+	defer reader.file.Close()
+	if err != nil {
+		return err
+	}
+
+	reader.reader = bufio.NewReaderSize(reader.file, 1024)
+
+	endOffset, err := reader.file.Seek(0, os.SEEK_END)
+	if err != nil {
+		return err
+	}
+
+	// offsetとファイル末尾の位置を確認してファイルがローテされたかをチェックする
+	// しかし、ファイルがローテされ、かつTailの周期よりも早く既存のofffsetよりもログが膨大になった場合検知できない
+	// 実用的にはログのテキストには時間が記録されているので、パースしてそれも見てローテされたかを判定するなど必要
+	if reader.offset > endOffset {
+		return fmt.Errorf("Invalid offset")
+	}
+
+	_, err = reader.file.Seek(reader.offset, 0)
 	if err != nil {
 		return err
 	}
@@ -61,8 +100,7 @@ func (reader *Reader) Tail() error {
 				fmt.Println("EOF")
 				break
 			} else {
-				fmt.Println("err:", err)
-				break
+				return err
 			}
 		}
 		line = strings.TrimRight(line, "\n")
@@ -82,6 +120,15 @@ func main() {
 
 	for {
 		err := reader.Tail()
+		if err != nil {
+			fmt.Printf("err: %v\n", err)
+			// ログローテなどで、ファイルが切り詰めらりたり、
+			if err = reader.ReOpen(); err != nil {
+				fmt.Printf("err: %v\n", err)
+			} else {
+				fmt.Printf("ReOpen")
+			}
+		}
 		fmt.Printf("end, seep 10 secconds, err=%v\n", err)
 		time.Sleep(time.Second * 10)
 	}
