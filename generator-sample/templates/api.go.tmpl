@@ -1,0 +1,52 @@
+package {{ .Version }}
+
+import (
+	"github.com/gin-gonic/gin"
+
+{{ range .Handlers }}
+	"{{ .PkgPath }}"
+{{- end }}
+)
+
+type Resolver interface {
+{{- range .Handlers }}
+	{{ .Name }}(input *{{ .PkgName }}.{{ .Name }}) (*{{ .PkgName }}.{{ .Name }}Data, int, error)
+{{- end }}
+}
+
+func New(engine *gin.Engine, resolver Resolver) {
+	handler := NewHandler(resolver)
+
+	group := engine.Group("{{ .Version }}")
+	{
+	{{- range .Handlers }}
+		group.{{ .Method }}("/{{ .Path }}", handler.{{ .Name }})
+	{{- end }}
+	}
+}
+
+type Handler struct {
+	resolver Resolver
+}
+
+func NewHandler(resolver Resolver) *Handler {
+	return &Handler{resolver: resolver}
+}
+
+
+{{ range .Handlers }}
+func (router *Handler) {{ .Name }} (c *gin.Context) {
+	data, statusCode, err := router.resolver.{{ .Name }}(&{{ .PkgName }}.{{ .Name }}{})
+	if err != nil {
+		c.JSON(statusCode, gin.H{
+			"Data":  data,
+			"Error": err,
+		})
+		return
+	}
+
+	c.JSON(statusCode, gin.H{
+		"Data": data,
+	})
+}
+{{ end }}
