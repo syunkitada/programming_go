@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os/exec"
 	"time"
@@ -129,6 +130,15 @@ func BasicSenario(db *gorm.DB) (err error) {
 		}).Error; err != nil {
 		return
 	}
+
+	// 更新処理時に更新行数とerrorを取得する
+	// 更新時や削除時は、対象が存在しない場合も成功となりバグの原因となるので注意する(必要に応じて明示的に行数も確認すべき)
+	// UPDATE `basic_types` SET `str` = 'piyo2'  WHERE `basic_types`.`id` = 2 AND ((id = 2))
+	// [1 rows affected or returned ]
+	// DEBUG update query: count=1, err=<nil>
+	query := db.Model(&piyo).Where("id = ?", piyo.Id).Updates(map[string]interface{}{"str": "piyo2"})
+	count, tmpErr := query.RowsAffected, query.Error
+	fmt.Printf("DEBUG update query: count=%d, err=%v\n", count, tmpErr)
 
 	var types []BasicType
 	// SELECT * FROM `basic_types`

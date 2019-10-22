@@ -44,3 +44,7 @@
 
 - string を使用しての join
 - int を使用しての join
+
+## 型について
+
+- text 型について
