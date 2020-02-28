@@ -5,11 +5,11 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"log"
 	"net/http"
 	"time"
-	"bytes"
 
 	"github.com/gorilla/websocket"
 )
@@ -188,7 +188,6 @@ func (h *Hub) run() {
 	}
 }
 
-
 var addr = flag.String("addr", "0.0.0.0:9090", "http service address")
 
 func serveHome(w http.ResponseWriter, r *http.Request) {
@@ -201,7 +200,7 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	http.ServeFile(w, r, "home.html")
+	http.ServeFile(w, r, "server/home.html")
 }
 
 func main() {
