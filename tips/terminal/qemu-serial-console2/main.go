@@ -2,12 +2,14 @@ package main
 
 import (
 	"bufio"
+	"context"
 	"fmt"
 	"io"
 	"log"
 	"net"
 	"os"
 	"os/signal"
+	"strings"
 	"sync"
 	"syscall"
 	"time"
@@ -114,15 +116,6 @@ func StartConsole(conf *Config) (err error) {
 
 	isPreExitKey := false
 	go func() {
-		defer func() {
-			// closeしたchannelに書き込んでpanicになることがある
-			// handle panic
-			if r := recover(); r != nil {
-				log.Print("panic recovered")
-				return
-			}
-		}()
-
 		stdin := bufio.NewReader(os.Stdin)
 		for {
 			ch, tmpErr := stdin.ReadByte()
@@ -184,19 +177,32 @@ func StartConsole(conf *Config) (err error) {
 		}
 	}()
 
-	// 出力を逐次出力する
+	// 逐次出力せずに、バッファしてから出力する
+	// 10msec 出力が途切れたら(timeoutしたら)、まとめて出力する
+	var strs []string
+	timeout := time.Duration(60 * time.Second)
 	for {
+		ctx, cancel := context.WithTimeout(context.Background(), timeout)
 		select {
 		case ch := <-sigCh:
+			cancel()
 			terminal.Restore(fd, state)
 			log.Printf("\nExit by %s\n", ch.String())
 			return
 		case <-doneCh:
+			cancel()
 			terminal.Restore(fd, state)
 			log.Printf("\nExit by doneCh\n")
 			return
 		case str := <-readCh:
-			fmt.Print(str)
+			cancel()
+			strs = append(strs, str)
+			timeout = time.Duration(10 * time.Millisecond)
+		case <-ctx.Done():
+			cancel()
+			fmt.Print(strings.Join(strs, ""))
+			strs = []string{}
+			timeout = time.Duration(60 * time.Second)
 		}
 	}
 
