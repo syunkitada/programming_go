@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/url"
 	"os"
-	"os/signal"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -18,9 +17,6 @@ func main() {
 	flag.Parse()
 	log.SetFlags(0)
 
-	interrupt := make(chan os.Signal, 1)
-	signal.Notify(interrupt, os.Interrupt)
-
 	u := url.URL{Scheme: "ws", Host: *addr, Path: "/ws"}
 	log.Printf("connecting to %s", u.String())
 
@@ -29,6 +25,7 @@ func main() {
 		log.Fatal("dial:", err)
 	}
 	defer c.Close()
+	log.Printf("connected")
 
 	done := make(chan struct{})
 
@@ -38,8 +35,10 @@ func main() {
 			close(done)
 		}()
 		for {
+			log.Println("Waiting read message")
 			_, message, err := c.ReadMessage()
 			if err != nil {
+				// Server側Close時のエラー: read: websocket: close 1006 (abnormal closure): unexpected EOF
 				log.Println("read:", err)
 				return
 			}
@@ -52,6 +51,7 @@ func main() {
 
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
+		log.Println("Waiting write message")
 		scanner.Scan()
 		err := c.WriteMessage(websocket.TextMessage, []byte(scanner.Text()))
 		if err != nil {
