@@ -68,7 +68,7 @@ github.com/syunkitada/go-samples/test-sample/simple2/api/api.go:7:      GetResul
 total:                                                                  (statements)    100.0%
 ```
 
-以下のようにすると、全体の Coverage が出せる
+以下のように--coverpkg オプションを付けると、パッケージ全体の Coverage が出せる
 
 また、lib パッケージのテストは書いてないがテストコードから間接的に呼び出しているので 100%となる
 
