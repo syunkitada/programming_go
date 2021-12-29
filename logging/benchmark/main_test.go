@@ -1,13 +1,16 @@
 package benchmark
 
 import (
+	"bufio"
 	"io"
 	"log"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/rs/zerolog"
 	"go.uber.org/zap"
+	"go.uber.org/zap/buffer"
 	"go.uber.org/zap/zapcore"
 )
 
@@ -17,8 +20,51 @@ func BenchmarkBuiltinLog(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		log.Print("output log")
+		log.Print("Hello World")
 	}
+}
+
+func BenchmarkBuiltinLogger(b *testing.B) {
+	file, _ := os.OpenFile("./output.log", os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+	logger := log.New(io.Writer(file), "", 0)
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		logger.Print("Time=" + time.Now().Format(time.RFC3339) + " Hello World")
+	}
+}
+
+func BenchmarkWrite(b *testing.B) {
+	file, _ := os.OpenFile("./output.log", os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+	writer := io.Writer(file)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		buf := buffer.Buffer{}
+		buf.AppendString("Hello World\n")
+		writer.Write(buf.Bytes())
+	}
+}
+
+func BenchmarkBufioWrite(b *testing.B) {
+	file, _ := os.OpenFile("./output.log", os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+	writer := bufio.NewWriter(file)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		writer.Write([]byte("Hello World\n"))
+	}
+	writer.Flush()
+}
+
+func BenchmarkBufioWriteBuffer(b *testing.B) {
+	file, _ := os.OpenFile("./output.log", os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+	writer := bufio.NewWriter(file)
+	bytes := []byte{}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		bytes = []byte("Hello World\n")
+		writer.Write(bytes)
+	}
+	writer.Flush()
 }
 
 func getZapConfig() zap.Config {
@@ -105,6 +151,8 @@ func BenchmarkZapLogDisableCaller(b *testing.B) {
 
 func BenchmarkZapLogZap(b *testing.B) {
 	conf := getZapConfig()
+	conf.DisableCaller = true
+	conf.DisableStacktrace = true
 	logger, _ := conf.Build()
 
 	b.ResetTimer()
