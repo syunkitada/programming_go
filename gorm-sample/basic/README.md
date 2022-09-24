@@ -46,3 +46,31 @@
 ## 型について
 
 - text 型について
+
+## DNS について
+
+- gorm とは直接関係ないが、以下のようなフォーマットを DNS(Data Source Name) と呼ぶ
+  - "user:password@tcp(localhost:3306)/db?charset=utf8&parseTime=true"
+- これは以下のように Config から生成することができる
+
+```
+import "github.com/go-sql-driver/mysql"
+
+
+// DNSを直接書いてOpenするパターン
+// db, err := sql.Open("mysql", "user:password@tcp(localhost:3306)/db?charset=utf8&parseTime=true")
+
+...
+// ConfigからDNSを生成するパターン
+c := mysql.Config{
+		DBName:    "db",
+		User:      "user",
+		Passwd:    "password",
+		Addr:      "localhost:3306",
+		Net:       "tcp",
+		ParseTime: true,
+		Collation: "utf8mb4_unicode_ci",
+		Loc:       jst,
+}
+db, err := sql.Open("mysql", c.FormatDSN()
+```
