@@ -1,0 +1,263 @@
+{
+  "consumes": [
+    "application/io.goswagger.examples.todo-list.v1+json"
+  ],
+  "produces": [
+    "application/io.goswagger.examples.todo-list.v1+json"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "From the todo list tutorial on goswagger.io\nSchemes:\nhttp",
+    "title": "A Todo list application",
+    "version": "1.0.0"
+  },
+  "host": "localhost",
+  "basePath": "/",
+  "paths": {
+    "/": {
+      "get": {
+        "description": "Get get API",
+        "tags": [
+          "todos"
+        ],
+        "operationId": "get"
+      },
+      "post": {
+        "description": "AddOne add one API",
+        "tags": [
+          "todos"
+        ],
+        "operationId": "addOne",
+        "parameters": [
+          {
+            "name": "Body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/item"
+            }
+          }
+        ]
+      }
+    },
+    "/{id}": {
+      "put": {
+        "description": "UpdateOne update one API",
+        "tags": [
+          "todos"
+        ],
+        "operationId": "updateOne",
+        "parameters": [
+          {
+            "name": "Body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/item"
+            }
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "name": "ID",
+            "in": "path",
+            "required": true
+          }
+        ]
+      },
+      "delete": {
+        "description": "DestroyOne destroy one API",
+        "tags": [
+          "todos"
+        ],
+        "operationId": "destroyOne",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "name": "ID",
+            "in": "path",
+            "required": true
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "error": {
+      "description": "Error error",
+      "type": "object",
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "description": "code",
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Code"
+        },
+        "message": {
+          "description": "message",
+          "type": "string",
+          "x-go-name": "Message"
+        }
+      },
+      "x-go-name": "Error",
+      "x-go-package": "github.com/syunkitada/programming_go/libs/openapi/lib_go-swagger/sample1/models"
+    },
+    "item": {
+      "description": "Item item",
+      "type": "object",
+      "required": [
+        "description"
+      ],
+      "properties": {
+        "completed": {
+          "description": "completed",
+          "type": "boolean",
+          "x-go-name": "Completed"
+        },
+        "description": {
+          "description": "description",
+          "type": "string",
+          "minLength": 1,
+          "x-go-name": "Description"
+        },
+        "id": {
+          "description": "id",
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID",
+          "readOnly": true
+        }
+      },
+      "x-go-name": "Item",
+      "x-go-package": "github.com/syunkitada/programming_go/libs/openapi/lib_go-swagger/sample1/models"
+    }
+  },
+  "responses": {
+    "addOneCreated": {
+      "description": "AddOneCreated Created",
+      "schema": {
+        "$ref": "#/definitions/item"
+      },
+      "headers": {
+        "body": {
+          "description": "In: Body"
+        }
+      }
+    },
+    "addOneDefault": {
+      "description": "AddOneDefault error",
+      "schema": {
+        "$ref": "#/definitions/error"
+      },
+      "headers": {
+        "_statusCode": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "body": {
+          "description": "In: Body"
+        }
+      }
+    },
+    "destroyOneDefault": {
+      "description": "DestroyOneDefault error",
+      "schema": {
+        "$ref": "#/definitions/error"
+      },
+      "headers": {
+        "_statusCode": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "body": {
+          "description": "In: Body"
+        }
+      }
+    },
+    "destroyOneNoContent": {
+      "description": "DestroyOneNoContent Deleted"
+    },
+    "findTodosDefault": {
+      "description": "FindTodosDefault generic error response",
+      "schema": {
+        "$ref": "#/definitions/error"
+      },
+      "headers": {
+        "_statusCode": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "body": {
+          "description": "In: Body"
+        }
+      }
+    },
+    "findTodosOK": {
+      "description": "FindTodosOK list the todo operations",
+      "headers": {
+        "body": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/item"
+          },
+          "description": "In: Body"
+        }
+      }
+    },
+    "getDefault": {
+      "description": "GetDefault generic error response",
+      "schema": {
+        "$ref": "#/definitions/error"
+      },
+      "headers": {
+        "_statusCode": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "body": {
+          "description": "In: Body"
+        }
+      }
+    },
+    "getOK": {
+      "description": "GetOK list the todo operations",
+      "headers": {
+        "body": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/item"
+          },
+          "description": "In: Body"
+        }
+      }
+    },
+    "updateOneDefault": {
+      "description": "UpdateOneDefault error",
+      "schema": {
+        "$ref": "#/definitions/error"
+      },
+      "headers": {
+        "_statusCode": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "body": {
+          "description": "In: Body"
+        }
+      }
+    },
+    "updateOneOK": {
+      "description": "UpdateOneOK OK",
+      "schema": {
+        "$ref": "#/definitions/item"
+      },
+      "headers": {
+        "body": {
+          "description": "In: Body"
+        }
+      }
+    }
+  }
+}
