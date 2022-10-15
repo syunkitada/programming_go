@@ -1,2 +1,2 @@
-compile-pb:
-	protoc -I pkg/grpc_pb/ pkg/grpc_pb/grpc_pb.proto --go_out=plugins=grpc:pkg/grpc_pb
+gen:
+	protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative pkg/grpc_pb/grpc_pb.proto
