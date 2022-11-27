@@ -1,8 +1,0 @@
-# ignore generated files by swagger-go
-cmd/*
-!cmd/godo
-!cmd/sample-cli
-pkg/sample-api/gen/*
-!pkg/sample-api/gen/api
-pkg/sample-api/gen/api/*
-!pkg/sample-api/gen/api/configure_sample_api.go

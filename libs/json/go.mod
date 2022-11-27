@@ -1,4 +1,4 @@
-module github.com/syunkitada/programming_go/libs/json/standard
+module json
 
 go 1.19
 

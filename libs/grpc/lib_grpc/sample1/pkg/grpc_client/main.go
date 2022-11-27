@@ -4,7 +4,7 @@ import (
 	"github.com/golang/glog"
 	"github.com/spf13/cobra"
 
-	"github.com/syunkitada/go-samples/grpc-sample/pkg/config"
+	"sample1/pkg/config"
 )
 
 var rootCmd = &cobra.Command{}

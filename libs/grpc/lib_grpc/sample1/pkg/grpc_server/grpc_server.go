@@ -9,8 +9,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
-	"github.com/syunkitada/go-samples/grpc-sample/pkg/config"
-	"github.com/syunkitada/go-samples/grpc-sample/pkg/grpc_pb"
+	"sample1/pkg/config"
+	"sample1/pkg/grpc_pb"
 )
 
 type SimpleServer struct {

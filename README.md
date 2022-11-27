@@ -1,32 +1,25 @@
-# Go Samples
+# Go
 
-- Go のツールやライブラリの使い方をまとめたサンプル集
+- 勉強用の Go プログラム群です
 
-## Basic Contents
+## コンテンツ
 
-| Link                         | Description                        |
-| ---------------------------- | ---------------------------------- |
-| [basicapp](basicapp)         | アプリケーションの基本テンプレート |
-| [godo-sample](godo-sample)   | godo(タスクランナー)の使い方       |
-| [test-sample](test-sample)   | テストコードのサンプル             |
-| [tips](tips)                 | 細かいチップス集                   |
-| [WAF についてのメモ](waf.md) | WAF についてのメモ                 |
-| [GAE](go_wit_gae.md)         | GAE の利用についてのメモ           |
-| [Go の始め方](howto.md)      | Go の始め方、学び方                |
+| Link                                        | Description                                            |
+| ------------------------------------------- | ------------------------------------------------------ |
+| [Getting Started](basic/getting_started.md) | 入門                                                   |
+| [基礎](basic/README.md)                     | 基礎                                                   |
+| [ライブラリ勉強用](libs/README.md)          | ライブラリ勉強用のメモ書きやサンプルコードなどの置き場 |
+| [チップス](tips/README.md)                  | 雑多なプログラム群                                     |
 
-## Servers
+## 最低限のルール
 
-| Link                           | Description                   |
-| ------------------------------ | ----------------------------- |
-| [webapp-sample](webapp-sample) | Native HTTP Server のサンプル |
-| [chi-sample](chi-sample)       | WAF chi のサンプル            |
-| [echo-sample](echo-sample)     | WAF echo のサンプル           |
-| [gin-sample](gin-sample)       | WAF gin のサンプル            |
-| [grpc-sample](grpc-sample)     | grpc のサンプル               |
+#### プロジェクト作成時
 
-## その他
+- go mod init は、以下のようにサブプロジェクトごとに初期化して利用します
+- 基本的に外部からの利用を想定しないのでディレクトリ名で初期化します
 
-- [High Performance Go Workshop](https://dave.cheney.net/high-performance-go-workshop/gopherchina-2019.html)
-- [Go の GC を 10 分で学ぼう](https://qiita.com/gold-kou/items/4431d3dd41606d41732b)
-- [Go 言語の Garbage Collector を理解したい](https://amasuda.xyz/post/2019-10-22-about-golang-gc/)
-- [Go バイナリの脆弱性検知](https://knqyf263.hatenablog.com/entry/2021/04/30/061147)
+```
+mkdir libs/lib_project1
+cd libs/lib_project1
+go mod init lib_project1
+```

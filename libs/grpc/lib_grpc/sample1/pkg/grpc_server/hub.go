@@ -3,7 +3,7 @@ package grpc_server
 import (
 	"github.com/golang/glog"
 
-	"github.com/syunkitada/go-samples/grpc-sample/pkg/grpc_pb"
+	"sample1/pkg/grpc_pb"
 )
 
 type Hub struct {

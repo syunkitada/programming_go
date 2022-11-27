@@ -143,17 +143,16 @@ func (x *simpleChatClient) Recv() (*ChatStream, error) {
 }
 
 // SimpleServer is the server API for Simple service.
-// All implementations must embed UnimplementedSimpleServer
+// All implementations should embed UnimplementedSimpleServer
 // for forward compatibility
 type SimpleServer interface {
 	Status(context.Context, *StatusRequest) (*StatusReply, error)
 	GetLogs(*GetLogRequest, Simple_GetLogsServer) error
 	ReportLogs(Simple_ReportLogsServer) error
 	Chat(Simple_ChatServer) error
-	mustEmbedUnimplementedSimpleServer()
 }
 
-// UnimplementedSimpleServer must be embedded to have forward compatible implementations.
+// UnimplementedSimpleServer should be embedded to have forward compatible implementations.
 type UnimplementedSimpleServer struct {
 }
 
@@ -169,7 +168,6 @@ func (UnimplementedSimpleServer) ReportLogs(Simple_ReportLogsServer) error {
 func (UnimplementedSimpleServer) Chat(Simple_ChatServer) error {
 	return status.Errorf(codes.Unimplemented, "method Chat not implemented")
 }
-func (UnimplementedSimpleServer) mustEmbedUnimplementedSimpleServer() {}
 
 // UnsafeSimpleServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to SimpleServer will
