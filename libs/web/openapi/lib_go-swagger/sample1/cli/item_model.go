@@ -7,9 +7,9 @@ package cli
 
 import (
 	"fmt"
+	"sample1/models"
 
 	"github.com/spf13/cobra"
-	"github.com/syunkitada/programming_go/libs/openapi/lib_go-swagger/sample1/models"
 )
 
 // Schema cli for Item

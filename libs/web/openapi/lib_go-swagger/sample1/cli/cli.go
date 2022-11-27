@@ -11,8 +11,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-
-	"github.com/syunkitada/programming_go/libs/openapi/lib_go-swagger/sample1/client"
+	"sample1/client"
 
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"

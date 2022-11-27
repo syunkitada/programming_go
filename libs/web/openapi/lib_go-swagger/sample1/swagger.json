@@ -1,10 +1,6 @@
 {
-  "consumes": [
-    "application/io.goswagger.examples.todo-list.v1+json"
-  ],
-  "produces": [
-    "application/io.goswagger.examples.todo-list.v1+json"
-  ],
+  "consumes": ["application/io.goswagger.examples.todo-list.v1+json"],
+  "produces": ["application/io.goswagger.examples.todo-list.v1+json"],
   "swagger": "2.0",
   "info": {
     "description": "From the todo list tutorial on goswagger.io\nSchemes:\nhttp",
@@ -17,16 +13,12 @@
     "/": {
       "get": {
         "description": "Get get API",
-        "tags": [
-          "todos"
-        ],
+        "tags": ["todos"],
         "operationId": "get"
       },
       "post": {
         "description": "AddOne add one API",
-        "tags": [
-          "todos"
-        ],
+        "tags": ["todos"],
         "operationId": "addOne",
         "parameters": [
           {
@@ -42,9 +34,7 @@
     "/{id}": {
       "put": {
         "description": "UpdateOne update one API",
-        "tags": [
-          "todos"
-        ],
+        "tags": ["todos"],
         "operationId": "updateOne",
         "parameters": [
           {
@@ -65,9 +55,7 @@
       },
       "delete": {
         "description": "DestroyOne destroy one API",
-        "tags": [
-          "todos"
-        ],
+        "tags": ["todos"],
         "operationId": "destroyOne",
         "parameters": [
           {
@@ -85,9 +73,7 @@
     "error": {
       "description": "Error error",
       "type": "object",
-      "required": [
-        "message"
-      ],
+      "required": ["message"],
       "properties": {
         "code": {
           "description": "code",
@@ -102,14 +88,12 @@
         }
       },
       "x-go-name": "Error",
-      "x-go-package": "github.com/syunkitada/programming_go/libs/openapi/lib_go-swagger/sample1/models"
+      "x-go-package": "sample1/models"
     },
     "item": {
       "description": "Item item",
       "type": "object",
-      "required": [
-        "description"
-      ],
+      "required": ["description"],
       "properties": {
         "completed": {
           "description": "completed",
@@ -131,7 +115,7 @@
         }
       },
       "x-go-name": "Item",
-      "x-go-package": "github.com/syunkitada/programming_go/libs/openapi/lib_go-swagger/sample1/models"
+      "x-go-package": "sample1/models"
     }
   },
   "responses": {

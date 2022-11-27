@@ -1,10 +1,10 @@
-module github.com/syunkitada/programming_go/libs/openapi/lib_go-restful
+module lib_go-restful
 
 go 1.19
 
 require (
 	github.com/emicklei/go-restful-openapi/v2 v2.9.1
-	github.com/emicklei/go-restful/v3 v3.9.0
+	github.com/emicklei/go-restful/v3 v3.10.1
 	github.com/go-openapi/spec v0.20.7
 )
 

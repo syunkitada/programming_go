@@ -13,7 +13,7 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/validate"
 
-	"github.com/syunkitada/programming_go/libs/openapi/lib_go-swagger/sample1/models"
+	"sample1/models"
 )
 
 // NewAddOneParams creates a new AddOneParams object

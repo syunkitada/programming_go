@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/syunkitada/programming_go/libs/openapi/lib_go-swagger/sample1/models"
+	"sample1/models"
 )
 
 // FindTodosReader is a Reader for the FindTodos structure.

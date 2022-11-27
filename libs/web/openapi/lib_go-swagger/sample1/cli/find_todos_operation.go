@@ -8,8 +8,7 @@ package cli
 import (
 	"encoding/json"
 	"fmt"
-
-	"github.com/syunkitada/programming_go/libs/openapi/lib_go-swagger/sample1/client/todos"
+	"sample1/client/todos"
 
 	"github.com/go-openapi/swag"
 	"github.com/spf13/cobra"

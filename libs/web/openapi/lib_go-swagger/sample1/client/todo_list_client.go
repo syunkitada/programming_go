@@ -10,7 +10,7 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/syunkitada/programming_go/libs/openapi/lib_go-swagger/sample1/client/todos"
+	"sample1/client/todos"
 )
 
 // Default todo list HTTP client.
