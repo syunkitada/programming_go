@@ -3,42 +3,13 @@ package main
 import (
 	"fmt"
 	"log"
-	"os/exec"
 	"sync"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/jinzhu/gorm"
-)
+	"gorm.io/gorm"
 
-func Transact(db *gorm.DB, txFunc func(tx *gorm.DB) (err error)) (err error) {
-	tx := db.Begin()
-	if err = tx.Error; err != nil {
-		return
-	}
-	defer func() {
-		if p := recover(); p != nil {
-			if tmpErr := tx.Rollback().Error; tmpErr != nil {
-				log.Printf("Failed rollback on recover: %s", tmpErr.Error())
-			}
-			err = fmt.Errorf("Recovered: %v", p)
-		} else if err != nil {
-			if tmpErr := tx.Rollback().Error; tmpErr != nil {
-				log.Printf("Failed rollback on err: %s", tmpErr.Error())
-			} else {
-				log.Printf("Rollbacked because of err: %s", err.Error())
-			}
-		} else {
-			if err = tx.Commit().Error; err != nil {
-				log.Printf("Failed commit: %s", err.Error())
-				if tmpErr := tx.Rollback().Error; tmpErr != nil {
-					log.Printf("Failed rollback on commit: %s", tmpErr.Error())
-				}
-			}
-		}
-	}()
-	err = txFunc(tx)
-	return
-}
+	"lib_gorm/utils/db_client"
+)
 
 type Vm struct {
 	Id      uint   `gorm:"not null;primary_key;"`
@@ -53,31 +24,34 @@ type Ip struct {
 	VmId    uint   `gorm:"not null;"`
 }
 
+type DbClient struct {
+	*db_client.DbClient
+}
+
 func main() {
-	connection := "goapp:goapppass@tcp(127.0.0.1:3306)/gorm_test?parseTime=true"
-	cmds := []string{"mysql", "-ugoapp", "-pgoapppass", "-e", "drop database if exists gorm_test; create database gorm_test;"}
-	out, err := exec.Command(cmds[0], cmds[1:]...).CombinedOutput()
-	if err != nil {
-		log.Fatalf("Failed connect: out=%s, err=%v", string(out), err)
+	dbClient := DbClient{
+		DbClient: db_client.New(&db_client.DefaultConfig),
 	}
 
-	db, err := gorm.Open("mysql", connection)
-	if err != nil {
-		log.Fatalf("Failed connect: %v", err)
-	}
-	defer db.Close()
-	db.LogMode(true)
+	dbClient.MustDropDatabase()
+	dbClient.MustCreateDatabase()
 
-	if err := TransactTest1(db); err != nil {
+	dbClient.MustOpen()
+	defer func() {
+		// connectionを明示的に閉じる（プロセス終了時に勝手に閉じてくれるがお作法として閉じておく）
+		dbClient.MustClose()
+	}()
+
+	if err := dbClient.TransactTest1(); err != nil {
 		return
 	}
 }
 
-func TransactTest1(db *gorm.DB) (err error) {
-	if err = db.AutoMigrate(&Vm{}).Error; err != nil {
+func (self *DbClient) TransactTest1() (err error) {
+	if err = self.DB.AutoMigrate(&Vm{}); err != nil {
 		return
 	}
-	if err = db.AutoMigrate(&Ip{}).Error; err != nil {
+	if err = self.DB.AutoMigrate(&Ip{}); err != nil {
 		return
 	}
 
@@ -86,10 +60,10 @@ func TransactTest1(db *gorm.DB) (err error) {
 		wg.Add(1)
 		name := fmt.Sprintf("hoge%d", i)
 		go func() {
-			if tmpErr := CreateUser(db, name); tmpErr != nil {
-				fmt.Println("Failed CreateUser: ", tmpErr.Error())
+			if tmpErr := self.CreateVm(name); tmpErr != nil {
+				fmt.Println("Failed CreateVm: ", tmpErr.Error())
 			} else {
-				fmt.Println("Success CreateUser")
+				fmt.Println("Success CreateVm")
 			}
 			wg.Done()
 		}()
@@ -100,7 +74,7 @@ func TransactTest1(db *gorm.DB) (err error) {
 	return
 }
 
-func CreateUser(db *gorm.DB, name string) (err error) {
+func (self *DbClient) CreateVm(name string) (err error) {
 	availableIps := []string{
 		"192.168.1.1",
 		"192.168.1.2",
@@ -108,7 +82,7 @@ func CreateUser(db *gorm.DB, name string) (err error) {
 		"192.168.1.4",
 		"192.168.1.5",
 	}
-	err = Transact(db, func(tx *gorm.DB) (err error) {
+	err = self.Transact(func(tx *gorm.DB) (err error) {
 		var vms []Vm
 		if err = tx.Table("vms").Select("name").Where("name = ? AND deleted = 0", name).Scan(&vms).Error; err != nil {
 			return

@@ -3,40 +3,12 @@ package main
 import (
 	"fmt"
 	"log"
-	"os/exec"
 	"time"
 
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/jinzhu/gorm"
-)
+	"gorm.io/gorm"
 
-func Transact(db *gorm.DB, txFunc func(tx *gorm.DB) (err error)) (err error) {
-	tx := db.Begin()
-	if err = tx.Error; err != nil {
-		return
-	}
-	defer func() {
-		if p := recover(); p != nil {
-			if tmpErr := tx.Rollback().Error; tmpErr != nil {
-				log.Printf("Failed rollback on recover: %s", tmpErr.Error())
-			}
-			err = fmt.Errorf("Recovered: %v", p)
-		} else if err != nil {
-			if tmpErr := tx.Rollback().Error; tmpErr != nil {
-				log.Printf("Failed rollback on err: %s", tmpErr.Error)
-			}
-		} else {
-			if err = tx.Commit().Error; err != nil {
-				log.Printf("Failed commit: %s", err.Error())
-				if tmpErr := tx.Rollback().Error; tmpErr != nil {
-					log.Printf("Failed rollback on commit: %s", tmpErr)
-				}
-			}
-		}
-	}()
-	err = txFunc(tx)
-	return
-}
+	"lib_gorm/utils/db_client"
+)
 
 type User struct {
 	gorm.Model
@@ -50,61 +22,59 @@ type Project struct {
 	Exist bool   `gorm:"default:true;unique_index:idx_name_deleted;"`
 }
 
+type DbClient struct {
+	*db_client.DbClient
+}
+
 func main() {
-	connection := "goapp:goapppass@tcp(127.0.0.1:3306)/gorm_test?parseTime=true"
-	cmds := []string{"mysql", "-ugoapp", "-pgoapppass", "-e", "drop database if exists gorm_test; create database gorm_test;"}
-	out, err := exec.Command(cmds[0], cmds[1:]...).CombinedOutput()
-	if err != nil {
-		log.Fatalf("Failed connect: out=%s, err=%v", string(out), err)
+	dbClient := DbClient{
+		DbClient: db_client.New(&db_client.DefaultConfig),
 	}
 
-	db, err := gorm.Open("mysql", connection)
-	if err != nil {
-		log.Fatalf("Failed connect: %v", err)
-	}
-	defer db.Close()
-	db.LogMode(true)
+	dbClient.MustDropDatabase()
+	dbClient.MustCreateDatabase()
+	dbClient.MustOpen()
 
-	if err := TransactTest1(db); err != nil {
+	if err := dbClient.TransactTest1(); err != nil {
 		return
 	}
 }
 
-func TransactTest1(db *gorm.DB) (err error) {
-	if err = db.AutoMigrate(&User{}).Error; err != nil {
+func (self *DbClient) TransactTest1() (err error) {
+	if err = self.DB.AutoMigrate(&User{}); err != nil {
 		return
 	}
-	if err = db.AutoMigrate(&Project{}).Error; err != nil {
+	if err = self.DB.AutoMigrate(&Project{}); err != nil {
 		return
 	}
 
-	if tmpErr := CreateUser(db, "hoge"); tmpErr != nil {
+	if tmpErr := self.CreateUser("hoge"); tmpErr != nil {
 		fmt.Println("Failed CreateUser: ", tmpErr.Error())
 	} else {
 		fmt.Println("Success CreateUser")
 	}
-	if tmpErr := DeleteUser(db, "hoge"); tmpErr != nil {
+	if tmpErr := self.DeleteUser("hoge"); tmpErr != nil {
 		fmt.Println("Failed DeleteUser: ", tmpErr.Error())
 	} else {
 		fmt.Println("Success DeleteUser")
 	}
-	if tmpErr := CreateUser(db, "hoge"); tmpErr != nil {
+	if tmpErr := self.CreateUser("hoge"); tmpErr != nil {
 		fmt.Println("Failed CreateUser: ", tmpErr.Error())
 	} else {
 		fmt.Println("Success CreateUser")
 	}
 
-	if tmpErr := CreateProject(db, "hoge"); tmpErr != nil {
+	if tmpErr := self.CreateProject("hoge"); tmpErr != nil {
 		fmt.Println("Failed CreateProject: ", tmpErr.Error())
 	} else {
 		fmt.Println("Success CreateProject")
 	}
-	if tmpErr := DeleteProject(db, "hoge"); tmpErr != nil {
+	if tmpErr := self.DeleteProject("hoge"); tmpErr != nil {
 		fmt.Println("Failed DeleteProject: ", tmpErr.Error())
 	} else {
 		fmt.Println("Success DeleteProject")
 	}
-	if tmpErr := CreateProject(db, "hoge"); tmpErr != nil {
+	if tmpErr := self.CreateProject("hoge"); tmpErr != nil {
 		fmt.Println("Failed CreateProject: ", tmpErr.Error())
 	} else {
 		fmt.Println("Success CreateProject")
@@ -114,8 +84,8 @@ func TransactTest1(db *gorm.DB) (err error) {
 	return
 }
 
-func CreateUser(db *gorm.DB, name string) (err error) {
-	err = Transact(db, func(tx *gorm.DB) (err error) {
+func (self *DbClient) CreateUser(name string) (err error) {
+	err = self.Transact(func(tx *gorm.DB) (err error) {
 		var users []User
 		if err = tx.Table("users").Select("name").Where("name = ? AND deleted = 0", name).Scan(&users).Error; err != nil {
 			return
@@ -132,8 +102,8 @@ func CreateUser(db *gorm.DB, name string) (err error) {
 	return
 }
 
-func DeleteUser(db *gorm.DB, name string) (err error) {
-	err = Transact(db, func(tx *gorm.DB) (err error) {
+func (self *DbClient) DeleteUser(name string) (err error) {
+	err = self.Transact(func(tx *gorm.DB) (err error) {
 		var users []User
 		if err = tx.Table("users").Select("id").Where("name = ? AND deleted = 0", name).Scan(&users).Error; err != nil {
 			return
@@ -153,8 +123,8 @@ func DeleteUser(db *gorm.DB, name string) (err error) {
 	return
 }
 
-func CreateProject(db *gorm.DB, name string) (err error) {
-	err = Transact(db, func(tx *gorm.DB) (err error) {
+func (self *DbClient) CreateProject(name string) (err error) {
+	err = self.Transact(func(tx *gorm.DB) (err error) {
 		var users []Project
 		if err = tx.Table("projects").Select("name").Where("name = ? AND exist IS NOT NULL", name).Scan(&users).Error; err != nil {
 			return
@@ -171,8 +141,8 @@ func CreateProject(db *gorm.DB, name string) (err error) {
 	return
 }
 
-func DeleteProject(db *gorm.DB, name string) (err error) {
-	err = Transact(db, func(tx *gorm.DB) (err error) {
+func (self *DbClient) DeleteProject(name string) (err error) {
+	err = self.Transact(func(tx *gorm.DB) (err error) {
 		var users []Project
 		if err = tx.Table("projects").Select("id").Where("name = ? AND exist IS NOT NULL", name).Scan(&users).Error; err != nil {
 			return

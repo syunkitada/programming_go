@@ -3,114 +3,43 @@ package main
 import (
 	"fmt"
 	"log"
-	"os/exec"
+	"net"
 	"strings"
 	"sync"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
+
+	"lib_gorm/utils/db_client"
+	"lib_gorm/utils/db_model"
 )
 
-type RetryError struct {
-	Ttl int
-	Msg string
-}
-
-func (e *RetryError) Error() string {
-	return e.Msg
-}
-
-func Transact(db *gorm.DB, txFunc func(tx *gorm.DB) (err error)) (err error) {
-	err = transact(db, txFunc)
-	if err != nil {
-		switch err.(type) {
-		case *RetryError:
-			ttl := err.(*RetryError).Ttl
-			for i := 0; i < ttl; i++ {
-				fmt.Printf("Retry count=%d, %s\n", i, err.Error())
-				err = transact(db, txFunc)
-				switch err.(type) {
-				case *RetryError:
-					continue
-				default:
-					return
-				}
-			}
-		default:
-			return
-		}
-	}
-	return
-}
-
-func transact(db *gorm.DB, txFunc func(tx *gorm.DB) (err error)) (err error) {
-	tx := db.Begin()
-	if err = tx.Error; err != nil {
-		return
-	}
-	defer func() {
-		if p := recover(); p != nil {
-			if tmpErr := tx.Rollback().Error; tmpErr != nil {
-				log.Printf("Failed rollback on recover: %s", tmpErr.Error())
-			}
-			err = fmt.Errorf("Recovered: %v", p)
-		} else if err != nil {
-			if tmpErr := tx.Rollback().Error; tmpErr != nil {
-				log.Printf("Failed rollback on err: %s", tmpErr.Error())
-			} else {
-				log.Printf("Rollbacked because of err: %s", err.Error())
-			}
-		} else {
-			if err = tx.Commit().Error; err != nil {
-				log.Printf("Failed commit: %s", err.Error())
-				if tmpErr := tx.Rollback().Error; tmpErr != nil {
-					log.Printf("Failed rollback on commit: %s", tmpErr.Error())
-				}
-			}
-		}
-	}()
-	err = txFunc(tx)
-	return
-}
-
-type Vm struct {
-	Id      uint   `gorm:"not null;primary_key;"`
-	Name    string `gorm:"not null;unique_index:idx_name_deleted;"`
-	Deleted uint   `gorm:"not null;unique_index:idx_name_deleted;"`
-	Address string `gorm:"not null;"`
-}
-
-type Ip struct {
-	Id      uint   `gorm:"not null;primary_key;"`
-	Address string `gorm:"not null;unique_index;"`
-	VmId    uint   `gorm:"not null;"`
+type DbClient struct {
+	*db_client.DbClient
 }
 
 func main() {
-	connection := "goapp:goapppass@tcp(127.0.0.1:3306)/gorm_test?parseTime=true"
-	cmds := []string{"mysql", "-ugoapp", "-pgoapppass", "-e", "drop database if exists gorm_test; create database gorm_test;"}
-	out, err := exec.Command(cmds[0], cmds[1:]...).CombinedOutput()
-	if err != nil {
-		log.Fatalf("Failed connect: out=%s, err=%v", string(out), err)
+	dbClient := DbClient{
+		DbClient: db_client.New(&db_client.DefaultConfig),
 	}
 
-	db, err := gorm.Open("mysql", connection)
-	if err != nil {
-		log.Fatalf("Failed connect: %v", err)
-	}
-	defer db.Close()
-	db.LogMode(true)
+	dbClient.MustDropDatabase()
+	dbClient.MustCreateDatabase()
+	dbClient.MustOpen()
 
-	if err := TransactTest1(db); err != nil {
+	if err := dbClient.TransactTest1(); err != nil {
 		return
 	}
 }
 
-func TransactTest1(db *gorm.DB) (err error) {
-	if err = db.AutoMigrate(&Vm{}).Error; err != nil {
+func (self *DbClient) TransactTest1() (err error) {
+	if err = self.DB.AutoMigrate(&db_model.Vm{}); err != nil {
 		return
 	}
-	if err = db.AutoMigrate(&Ip{}).Error; err != nil {
+	if err = self.DB.AutoMigrate(&db_model.Port{}); err != nil {
+		return
+	}
+	if err = self.DB.AutoMigrate(&db_model.VmPort{}); err != nil {
 		return
 	}
 
@@ -119,10 +48,10 @@ func TransactTest1(db *gorm.DB) (err error) {
 		wg.Add(1)
 		name := fmt.Sprintf("hoge%d", i)
 		go func() {
-			if tmpErr := CreateUser(db, name); tmpErr != nil {
-				fmt.Println("Failed CreateUser: ", tmpErr.Error())
+			if tmpErr := self.CreateVm(name); tmpErr != nil {
+				fmt.Println("Failed CreateVm: ", tmpErr.Error())
 			} else {
-				fmt.Println("Success CreateUser")
+				fmt.Println("Success CreateVm")
 			}
 			wg.Done()
 		}()
@@ -133,7 +62,7 @@ func TransactTest1(db *gorm.DB) (err error) {
 	return
 }
 
-func CreateUser(db *gorm.DB, name string) (err error) {
+func (self *DbClient) CreateVm(name string) (err error) {
 	availableIps := []string{
 		"192.168.1.1",
 		"192.168.1.2",
@@ -141,16 +70,29 @@ func CreateUser(db *gorm.DB, name string) (err error) {
 		"192.168.1.4",
 		"192.168.1.5",
 	}
-	err = Transact(db, func(tx *gorm.DB) (err error) {
-		var assignedIps []Ip
-		if err = tx.Table("ips").Select("id, address").Scan(&assignedIps).Error; err != nil {
+	err = self.TransactWithRetry(func(tx *gorm.DB) (err error) {
+		var vms []db_model.Vm
+		if err = tx.Table("vms").Select("name").Where("name = ? AND deleted = 0", name).Scan(&vms).Error; err != nil {
+			return
+		}
+		if len(vms) > 0 {
+			fmt.Println("vm is already exists")
+			return
+		}
+		vm := db_model.Vm{Name: name}
+		if err = tx.Create(&vm).Error; err != nil {
+			return
+		}
+
+		var assignedPorts []db_model.Port
+		if err = tx.Table("ports").Select("*").Scan(&assignedPorts).Error; err != nil {
 			return
 		}
 		var freeIps []string
 		for _, availableIp := range availableIps {
 			isAssigned := false
-			for _, assignedIp := range assignedIps {
-				if availableIp == assignedIp.Address {
+			for _, port := range assignedPorts {
+				if port.IP.String() == availableIp {
 					isAssigned = true
 					break
 				}
@@ -165,31 +107,24 @@ func CreateUser(db *gorm.DB, name string) (err error) {
 			return
 		}
 
-		ip := Ip{Address: freeIps[0]}
-		if err = tx.Create(&ip).Error; err != nil {
+		port := db_model.Port{
+			IP: db_model.IP{IP: net.ParseIP(freeIps[0])},
+		}
+		if err = tx.Create(&port).Error; err != nil {
 			if strings.Contains(err.Error(), "Duplicate entry") {
-				err = &RetryError{Msg: err.Error(), Ttl: 3}
+				err = &db_client.RetryError{Msg: err.Error(), Ttl: 3}
 			}
 			return
 		}
 
-		var vms []Vm
-		if err = tx.Table("vms").Select("name").Where("name = ? AND deleted = 0", name).Scan(&vms).Error; err != nil {
+		vmPort := db_model.VmPort{
+			VmId:   vm.VmId,
+			PortId: port.PortId,
+		}
+		if err = tx.Create(&vmPort).Error; err != nil {
 			return
 		}
-		if len(vms) > 0 {
-			fmt.Println("vm is already exists")
-			return
-		}
-		vm := Vm{Name: name, Address: ip.Address}
-		if err = tx.Create(&vm).Error; err != nil {
-			return
-		}
-		if err = tx.Table("ips").Where("id = ?", ip.Id).Updates(map[string]interface{}{
-			"vm_id": vm.Id,
-		}).Error; err != nil {
-			return
-		}
+
 		return
 	})
 	return
