@@ -24,6 +24,14 @@
   - go-restful
     - https://github.com/emicklei/go-restful
     - k8s で使われてるやつ
+  - go-swagger
+    - https://github.com/go-swagger/go-swagger
+  - open-go
+    - https://github.com/ogen-go/ogen
+  - oapi-codegen
+    - https://github.com/deepmap/oapi-codegen
+  - kin-openapi
+    - https://github.com/getkin/kin-openapi
 
 ## swagger-ui
 
@@ -32,3 +40,12 @@ $ sudo docker run --name swagger --rm -p 3000:8080 -e SWAGGER_JSON=/swagger/swag
 
 $ sudo docker run --name swagger --rm -p 3000:8080 -e SWAGGER_JSON=/swagger/swagger.json -v $PWD/lib_go-swagger/sample1:/swagger swaggerapi/swagger-ui
 ```
+
+## メモ
+
+- [Go における API ドキュメントベースの Web API 開発について登壇しました](https://future-architect.github.io/articles/20210427c/)
+  - ソースコードから vs API ドキュメントから
+    - API ドキュメントからのがよい
+  - どれを使うのが良いか？
+    - OpenAPI 2.0 でよいなら go-swagger
+    - OpenAPI 3.0 がよいなら opai-codegen + Echo
