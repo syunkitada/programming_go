@@ -15,13 +15,15 @@ go のプロジェクトレイアウトは多岐にわたっており、悩ま�
 
 ```
 api/
-  [application name]/    # OpenAPI/Swaggerの定義書
+  [application name]/    # OpenAPIの定義書
     openapi.yaml
 cmd/
   [application name]/    # 各アプリケーションのエントリポイント
     main.go
 internal/                # 各アプリケーションの非公開実装
   [application name]/
+    handler/             # OpenAPIのハンドラ実装(application層、usecase層などと呼ばれる、ビジネスロジックをここに置いてはいけない)
+    controller/          # ビジネスロジックの実装
   lib/ or util/          # 共通ライブラリ
     ...
   model/                 # モデル定義

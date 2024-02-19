@@ -11,8 +11,8 @@ import (
 	middleware "github.com/oapi-codegen/echo-middleware"
 
 	"github.com/syunkitada/programming_go/project_examples/shop/api/shop-api/oapi"
-	"github.com/syunkitada/programming_go/project_examples/shop/internal/shop-api/api"
 	"github.com/syunkitada/programming_go/project_examples/shop/internal/shop-api/config"
+	"github.com/syunkitada/programming_go/project_examples/shop/internal/shop-api/handler"
 )
 
 func main() {
@@ -32,7 +32,7 @@ func main() {
 	swagger.Servers = nil
 
 	// Create an instance of our handler which satisfies the generated interface
-	petStore := api.NewShop(&conf)
+	apiHandler := handler.NewHandler(&conf)
 
 	// This is how you set up a basic Echo router
 	e := echo.New()
@@ -43,7 +43,7 @@ func main() {
 	e.Use(middleware.OapiRequestValidator(swagger))
 
 	// We now register our petStore above as the handler for the interface
-	oapi.RegisterHandlers(e, petStore)
+	oapi.RegisterHandlers(e, apiHandler)
 
 	// And we serve HTTP until the world ends.
 	e.Logger.Fatal(e.Start(net.JoinHostPort("0.0.0.0", *port)))

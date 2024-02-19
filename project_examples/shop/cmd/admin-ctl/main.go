@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/syunkitada/programming_go/project_examples/shop/internal/config"
 	"github.com/syunkitada/programming_go/project_examples/shop/internal/repository"
+	"github.com/syunkitada/programming_go/project_examples/shop/internal/shop-api/config"
 )
 
 func main() {
