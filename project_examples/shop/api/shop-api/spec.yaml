@@ -1,0 +1,159 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Swagger Itemstore
+  description: A sample API that uses a itemstore as an example to demonstrate features in the OpenAPI 3.0 specification
+  termsOfService: https://swagger.io/terms/
+  contact:
+    name: Swagger API Team
+    email: apiteam@swagger.io
+    url: https://swagger.io
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+paths:
+  /v1/items:
+    get:
+      summary: Returns all items
+      description: |
+        Returns all items
+      operationId: findItems
+      parameters:
+        - name: tags
+          in: query
+          description: tags to filter by
+          required: false
+          style: form
+          schema:
+            type: array
+            items:
+              type: string
+        - name: limit
+          in: query
+          description: maximum number of results to return
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: item response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Item"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: Creates a new item
+      description: Creates a new item in the store. Duplicates are allowed
+      operationId: addItem
+      requestBody:
+        description: Item to add to the store
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewItem"
+      responses:
+        "200":
+          description: item response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /v1/items/{id}:
+    get:
+      summary: Returns a item by ID
+      description: Returns a item based on a single ID
+      operationId: findItemByID
+      parameters:
+        - name: id
+          in: path
+          description: ID of item to fetch
+          required: true
+          schema:
+            type: integer
+            format: uint64
+      responses:
+        "200":
+          description: item response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      summary: Deletes a item by ID
+      description: deletes a single item based on the ID supplied
+      operationId: deleteItem
+      parameters:
+        - name: id
+          in: path
+          description: ID of item to delete
+          required: true
+          schema:
+            type: integer
+            format: uint64
+      responses:
+        "204":
+          description: item deleted
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    Item:
+      allOf:
+        - $ref: "#/components/schemas/NewItem"
+        - required:
+            - id
+          properties:
+            id:
+              type: integer
+              format: uint64
+              description: Unique id of the item
+
+    NewItem:
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: Name of the item
+        tag:
+          type: string
+          description: Type of the item
+
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code
+        message:
+          type: string
+          description: Error message
